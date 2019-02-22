@@ -1,4 +1,0 @@
-#Ingore logs
-*.log
-#ignore Modules
-/node_modules
