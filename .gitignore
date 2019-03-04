@@ -3,4 +3,4 @@
 #ignore Modules
 node_modules
 #Ignore lock.json
-*package-lock.json
+*.package-lock.json

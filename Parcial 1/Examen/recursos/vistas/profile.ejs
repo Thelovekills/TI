@@ -1,0 +1,100 @@
+<%- layout('layouts/main')%>
+<!--Informacion del usuario-->
+<div class="row p-2">
+    <div class="col-md-3" width="50px" height="50px">
+        <img src="<%= user.profile_picture %>" class="rounded-circle" />
+    </div>
+    <div class="col">
+        <div class="card text-center">
+            <div class="card-body text-center">
+                <h5 class="card-title"><%= user.full_name %></h5>
+                <%=user.full_name%>
+                <%=user.bio %>
+                <hr />
+                <%=user.counts.media %> <i class="fas fa-camera"></i> -
+                <%=user.counts.follows %> <i class="fas fa-heart"></i> -
+                <%=user.counts.followed_by %> <i class="fas fa-users"></i>
+            </div>
+            <div class="card-footer">
+                <a href="<%=user.website %>" class="btn btn-success btn-block" target="_blank">Website</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<!--Car para poder mostrar las fotos y videos-->
+<div class="card text-center">
+    <div class="card-header">
+        <ul class="nav nav-tabs card-header-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" href="#">Fotos</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Videos</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link disabled" href="#">Follow</a>
+            </li>
+        </ul>
+    </div>
+    <div class="card-body">
+        <div class="row p-2">
+            <div class="col-md-9">
+                <div class="row">
+                    <% posts.forEach(function( post ) { %>
+                    <div class="col-md-4">
+                        <div class="card mb-2 animated bounceInUp">
+                            <img src="<%= post.images.thumbnail.url %>" class="card-img-top imagen"/>
+                            <div class="card-body">
+                                <p>Posted By <%= post.user.full_name %></p>
+                                <p class="text-muted"><%= formatDate(post.created_time) %></p>
+                            </div>
+                        </div>
+                    </div>
+                    <% })%>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal para poder visualizar las fotos
+    **Incompleto
+-->
+<div id="mimodal" class="modal fade" role="dialog" style="display: none;">
+        <div class="modal-dialog">
+            <span class="glyphicon glyphicon-ban-circle cerrar" data-dismiss="modal"></span>
+            <% posts.forEach(function( post ) { %>
+            <img src="<%= post.images.thumbnail.url %>" class="modal-content recibir-imagen" width="100%" height="100%">
+            <% })%>
+            <div class="modal-footer">
+              <p><strong class="texto-imagen">Instagram</strong></p>
+            </div>
+        </div>
+      </div>
+
+      <script type="text/javascript">
+
+        $(function(){
+      
+          $('.imagen').click(function(){
+              var imagen1=$(this).attr('src');
+              var titleimagen=$(this).attr('title');
+      
+              if (imagen1==""){
+      
+                $('.recibir-imagen').attr('src','http://www.51allout.co.uk/wp-content/uploads/2012/02/Image-not-found.gif');
+                $('#mimodal').modal();
+      
+              }else{
+                  $('.recibir-imagen').attr('src',imagen1);
+                  $('.texto-imagen').text(titleimagen);
+                  $('#mimodal').modal();
+            }
+          });
+      
+        });
+      
+      </script>

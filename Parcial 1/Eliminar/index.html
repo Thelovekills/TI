@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Tarea De Express by CMM</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <style>
+        .button {
+            background-color: #4CAF50;
+            /* Green */
+            border: none;
+            color: white;
+            padding: 6px 12px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            -webkit-transition-duration: 0.4s;
+            /* Safari */
+            transition-duration: 0.4s;
+            cursor: pointer;
+        }
+
+        .button1 {
+            background-color: white;
+            color: black;
+            border: 2px solid #4CAF50;
+        }
+
+        .button1:hover {
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+
+
+</head>
+
+<body>
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="#">
+            <img src="img/uaslp_logo.png" width="100" height="100" class="d-inline-block align-top" alt="">
+            Tecnolog&iacute;as Inform&aacute;ticas
+        </a>
+    </nav>
+
+    <div class="container">
+        <h1>Hello World! Node, Express, jQuery</h1>
+        <h1>Cryptomonedas!</h1>
+
+        <form action="">
+            <p>Portafolio</p>
+            <h3>Ejemplo de Cryptomonedas:</h3>
+            <div>
+                <ul>
+                    <li>
+                        <h3>Bitcoin</h3>
+                    </li>
+                    <li>
+                        <h3>Etherum</h3>
+                    </li>
+                    <li>
+                        <h3>Litcoin</h3>
+                    </li>
+                    <li>
+                        <h3>Cardano</h3>
+                    </li>
+                </ul>
+            </div>
+            <input type="text" placeholder="Cryptomoneda" name="nnombre" id="crypto">
+            <input type="text" placeholder="Cantidad" name="ncanti" id="cantidad">
+            <button id="save" type="button" class="button button1"> Guardar </button>
+        </form>
+        <br>
+        <div class="clear"></div>
+    <div>
+        <h4> Lista de cryptos </h4>
+        <ul id="lista-cryptos" class="list-group">
+
+        </ul>
+    </div>
+    </div>
+</body>
+
+<script>
+    //cunado el documento este listo y todos los objetos 
+    $(document).ready(function () {
+
+        getCryptos();
+        //Programacion del boton act para obtener datos del input.
+        $("#save").on("click", function (event) {
+            console.log(event);
+            var crypto = {}; //Creacion de objeto con la info necesaria.
+            crypto.nombre = $("#crypto").val();
+            crypto.cantidad = $("#cantidad").val();
+            //Invocamos a la funcion para llamadas post y mandamos el obeto.
+            sendPOSTRequest(crypto);
+        });
+
+    });
+
+    function getCryptos(){
+        //LLamada GET para obtener los alumnos
+        //Se muestra resultado con una lista en HTML
+        //Se utiliza un ciclo for y se genera el codigo HTML
+        //Usando Jquery se coloca el HTML en la lista.
+        $.get("http://localhost:3000/cryptos", function(data){
+            var listHTML = "";
+            console.log(data);
+            data.forEach(crypto => {
+                listHTML += "<li class='list-group-item'>" + 
+                " <button type='button' class='delete btn btn-danger btn-sm' data-cantidad='"+ crypto.cantidad +"'> <i class='material-icons'>delete</i> </button> " + 
+                " <button type='button' class='edit btn btn-warning btn-sm' data-cantidad='"+ crypto.cantidad +"'> <i class='material-icons'>edit</i> </button> " +
+                " | Cantidad : " + crypto.cantidad + " | Nombre: " + crypto.nombre +  " </li>";
+            });
+            $("#lista-cryptos").html(listHTML);
+
+            //Programacion para los botones delete
+            $(".delete").on("click", (event) =>{
+                console.log("Button delete");
+                console.log(event.target);
+                sendDELETERequest({ "cantidad" : event.target.dataset["cantidad"] });
+            });
+        });
+    }
+
+
+
+
+    function sendPOSTRequest(body_object) {
+        //Llamada post al backend usando jquery.
+        console.log("Objeto enviado por POST: ");
+        console.log(body_object);
+
+        $.post("http://localhost:3000/cryptos", body_object,
+            function () {
+                alert("Cryptomoneda guardada.");
+                getCryptos();
+
+            });
+    }
+
+
+    function sendDELETERequest(body_object) {
+        //Llamada delete al backend por medio de jquery
+
+        $.ajax({
+            method: "DELETE",
+            url: "http://localhost:3000/cryptos",
+            data: body_object
+            })
+            .done(function( msg ) {
+                alert( "Cryptomoneda eliminada: " + body_object.cantidad );
+            })
+            .fail(function(msg){
+                alert("Error al eliminar la cryptomoneda: " + body_object.cantidad)
+            }); 
+            getCryptos();
+    }
+</script>
+
+</html>
