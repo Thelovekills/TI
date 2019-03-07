@@ -1,2 +1,2 @@
-# Repositorio para la materia de Tecnologia Informatica
+# Repositorio para la materia de Tecnología Informática
 #by César Mondragón
